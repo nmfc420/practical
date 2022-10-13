@@ -1,0 +1,359 @@
+Complex Number Practical 1
+
+def add(z1,z2):
+    x1=z1.real
+    y1=z1.imag
+    x2=z2.real
+    y2=z2.imag
+    x=x1+x2
+    y=y1+y2
+    return complex(x,y)
+
+def multiply(z1,z2):
+    x1=z1.real
+    y1=z1.imag
+    x2=z2.real
+    y2=z2.imag
+    x=x1*x2-y1*y2
+    y=x1*y2+x2*y1
+    return complex(x,y)
+
+def conjugate(z):
+    x=z.real
+    y=z.imag
+    return complex(x, -y)
+
+def divide(z1,z2):
+    z=multiply(z1,conjugate(z2))
+    x=z2.real
+    y=z2.imag
+    z=z/(x**2+y**2)
+    return z
+
+def rotate(z,t):
+    import cmath as m
+    p=m.phase(z)
+    r=abs(z)
+    p=p+t*m.pi/180
+    z=m.rect(r,p)
+    return z
+
+def scale_rotate(z,t,scale):
+    import cmath as m
+    p=m.phase(z)
+    r=abs(z)
+    p=p+t*m.pi/180
+    z=m.rect(scale*r,p)
+    return z
+
+________________________________________________________________________________________________________________________________________________________________
+________________________________________________________________________________________________________________________________________________________________
+
+#Practical No:-02 Vectors
+#Q1 Write a program to input two real vectors
+#Q2 Write a program to input find linear combination of these two vector
+#Q3 Write a program to find product of this two vectors.
+
+n=int(input("Enter the dimension of vectors: "))
+u=list()
+print("Enter the value u: ")
+for i in range(0,n):
+    p=int(input(""))
+    u.append(p)
+print("Vector u is: ",u)
+
+v=list()
+print("Enter the vector: ",v)
+for i in range(0,n):
+    p=int(input(""))
+    v.append(p)
+print("vector v is: ",v)
+
+def combine(a,b):
+    c=[0]*n
+    for i in range(0,n):
+        c[i]=a*u[i]+b*v[i]
+    return c
+
+def product():
+    s=0
+    for i in range(0,n):
+        s=s+u[i]*v[i]
+    return s
+________________________________________________________________________________________________________________________________________________________________
+________________________________________________________________________________________________________________________________________________________________
+
+
+#Practical No 3 Title:- Matrix
+# write a python program program to input two matrices.
+# write a python program to add two matrices.
+# write a python program to find scalar multiplication of matrix.
+# write a python program to find transpose of matrix.
+# write a python program to display specific row and column. 
+
+m=int(input("Enter the number of rows in matrices A & B : "))
+n=int(input("Enter the number of columns in matrices A & B : "))
+A=[]
+for i in range(0,m):
+    A.append([])
+    A[i]=[0]*n
+    for j in range(0,n):
+        print("Entry of matrix A[",i+1,",",j+1,"]=")
+        A[i][j]=int(input())
+print("Matrix A : ")
+for i in range(0,m):
+    print(A[i])
+print(A)
+
+B=[]
+for i in range(0,m):
+    B.append([])
+    B[i]=[0]*n
+    for j in range(0,n):
+        print("Entry of matrix B[",i+1,",",j+1,"]=")
+        B[i][j]=int(input())
+print("Matrix B : ")
+for i in range(0,m):
+    print(B[i])
+print(B)
+
+def AddMat(A,B):
+    C=[]
+    for i in range(0,m):
+        C.append([])
+        C[i]=[0]*n
+        for j in range(0,n):
+            C[i][j]=A[i][j]+B[i][j]
+    print("Matrix A + B : ")
+    for i in range(0,m):
+        print(C[i])
+    print(C)
+
+def ScaleMult(A,k):
+    C=[]
+    for i in range(0,m):
+        C.append([])
+        C[i]=[0]*n
+        for j in range(0,n):
+            C[i][j]=A[i][j]*k
+    print("Matrix kA : ")
+    for i in range(0,m):
+        print(C[i])
+    print(C)
+
+def TransMat(A):
+    C=[]
+    for i in range(0,m):
+        C.append([])
+        C[i]=[0]*n
+        for j in range(0,n):
+            C[i][j]=A[i][j]
+    print("Transpose of  Matrix : ")
+    for i in range(0,m):
+        print(C[i])
+    print(C)
+
+def DisRow(A,r):
+    return A[r-1]
+
+def DisCol(A,c):
+    for i in range(0,n):
+        print([A[i][c-1]])
+
+def PrintCol(A,c):
+    return DisRow(TransMat (A),c)
+    
+    
+________________________________________________________________________________________________________________________________________________________________
+________________________________________________________________________________________________________________________________________________________________
+
+
+# PRACT 04: Title:-INTEGER
+# Q1 WAPP TO FIND A AND B SUCH THAT N=a^2-b^2 for N>5
+# Q2 WAPP TO FIND GCD +OF TWO INTEGERS.
+# Q3 WAPP TO FIND LCM OF TWO INTEGERS.
+
+
+
+def numbers(N):
+    x=1
+    for i in range(2,int(N/2)):
+        if N%i==0:
+# M2 : N%2==0 x=2 don't use break
+            x=i
+            y=N/i
+            a,b=(x+y)*0.5,(x-y)*0.5
+            break
+
+        else:
+            a=(N-1)/2
+            b=a+1
+    if abs(a)<abs(b):
+        a,b=b,a
+    print("Value of a:",abs(a))
+    print("Value of b:",abs(b))
+    print("Value of N:",abs(a*a-b*b))
+
+
+# Q2:
+def GCD(a,b):
+    x=abs(a)
+    y=abs(b)
+    r=1
+    if x>y:
+        x,y=y,x
+    if y==0:
+        if x==0:
+            print("GCD of",a,"&",b,"is not define")
+        else:
+            print("GCD of",a,"&",b,"is",x)
+    else:
+        while r!=0:
+            r=x%y
+            x=y
+            y=r
+    return x
+
+# Q3:
+def LCM(a,b):
+    print("LCM",a,"&",b,"is",(a*b)/GCD(a,b))
+    
+________________________________________________________________________________________________________________________________________________________________
+________________________________________________________________________________________________________________________________________________________________
+
+
+# PRACT 05: INVERSE MATRIX
+# Q1 WAPP TO INPUT MATRIX AND DISPLAY DETERMINANT AND INVERSE OF THAT MATRIX.
+# Q2 WAPP TO FIND EIGEN VALUE AND EIGEN VECTORS OF MATRIX A.
+
+
+
+import numpy as np
+m=int(input("Enter the no of rows in matrices A & B:"))
+n=int(input("Enter the no of Column in matrices A & B:"))
+M=[]
+for i in range(0,m):
+    M.append([])
+    M[i]=[0]*n
+    for j in range(0,n):
+        print("Entry of Matrix M[",i+1,",",j+1,"]=")
+        M[i][j]=int(input())
+print("Matrix M :\n", np.mat(M))
+a=np.linalg.det(M)
+print("Determinant of matrix M is:",a)
+if a!=0:
+    Minv=np.linalg.inv(M)
+    print("The inverse of matrix M is:\n",np.mat(Minv))
+else:
+    print("Matrix is not Invertible")
+
+
+A=np.mat("1,-1,0;-1,2,-1;0,-1,1")
+def eigen(A):
+    import numpy as np
+    print("A:\n",A)
+    e_values, e_vectors=np.linalg.eig(A)
+    print("\n eigen values are: \n", e_values)
+    print("\n eigen vectors are: \n", e_vectors)
+
+________________________________________________________________________________________________________________________________________________________________
+________________________________________________________________________________________________________________________________________________________________
+
+
+# prac 06 Title:- Resize and Merge
+# Q1 Write a python program to resize a picture.
+# Q2 Write a python program to merge two pictures.
+
+def RESIZE(IM_1,m,n):
+    from PIL import Image
+    a1 =Image.open(IM_1)
+    a1.show()
+    new_a1= a1.resize((m,n))
+    new_a1.save('D:/Practicals/Linear-Algebra/Practical-6/RE_FACE_1.PNG')
+    new_a1.show()
+
+def MERGE(IM_1,IM_2,a,b):
+    from PIL import Image
+    import numpy as np
+    a1 =Image.open(IM_1)
+    a2 =Image.open(IM_2)
+    a1.show()
+    a2.show()
+    new_a1= a1.resize((300, 300))
+    new_a2= a2.resize((300, 300))
+    new_a1.save('D:/Practicals/Linear-Algebra/Practical-6/ME_FACE_2.jpg')
+    new_a2.save('D:/Practicals/Linear-Algebra/Practical-6/ME_FACE_3.jpg')
+    p=np.array(new_a1)+np.array(new_a2)
+    a=Image.fromarray(p)
+    a.save('D:/Practicals/Linear-Algebra/Practical-6/ME_FACE.jpg')
+    a.show()
+    print(np.array(a))
+
+#RESIZE('D:/Practicals/Linear-Algebra/Practical-6/face1.jpg',100,100)
+
+MERGE('D:/Practicals/Linear-Algebra/Practical-6/face1.jpg','D:/Practicals/Linear-Algebra/Practical-6/face2.jpg',300,300)
+
+________________________________________________________________________________________________________________________________________________________________
+________________________________________________________________________________________________________________________________________________________________
+
+
+# Practical 7 : Title: Rotate & crop
+# Q1 Write a python program to rotate a image by 45, 90, 18
+# Q2 Write a python program to crop a picture.
+
+def Rotate(IM_1,t):
+    from PIL import Image
+    a1=Image.open(IM_1)
+    a1.show()
+    rot_a1=a1.rotate(t)
+    rot_a1=a1.show()
+    rot.a1.save('F:/22SCS021/Linear-Algebra/Practical-7/rot_FACE_1.jpg')
+
+def Crop(IM_1,cords):
+    from PIL import Image
+    a1=Image.open(IM_1)
+    a1.show()
+    croped=a1.crop(cords)
+    croped.show()
+    croped.save('F:/22SCS021/Linear-Algebra/Practical-7/crop_FACE_1.jpg')
+    
+________________________________________________________________________________________________________________________________________________________________
+________________________________________________________________________________________________________________________________________________________________
+
+
+#Prac 8 Title:-decomposition of vector
+# Q1 WAP to check whether the given vectors are orthogonal.If yes,then check whether they are orthonormal.
+# Q2 WAP to decompose vectors b as sum of vector closest to a and vector orthogonal to a.
+
+def ips(x,y):
+    p=0
+    for i in range(len(x)):
+        p+=x[i]*y[i]
+    return p
+def norm(x):
+    import math as m
+    nrm=m.sqrt(ips(x,x))
+    return nrm
+def ortho(x,y):
+    if abs(ips(x,y))<=0.000000000001:
+        if norm(x)==1 and norm(y)==1:
+            print(x,'and',y,'are orthonormal')
+        else:
+            print(x,'and',y,'are orthogonal')
+    else:
+        print(ips(x,y))
+        print(x,'and',y,'are not orthogonal')
+
+def proj(v,u):
+    t=ips(u,v)/ips(u,u)
+    p=[0]*len(u)
+    for i in range(len(u)):
+        p[i]=t*u[i]
+    return p
+
+def Decompose(b,a):
+    b1=proj(b,a)
+    b2=[0]*len(b)
+    for i in range(len(b)):
+        b2[i]=b[i]-b1[i]
+    print(b,'=',b1,'+',b2)
