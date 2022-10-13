@@ -1,0 +1,531 @@
+1A
+
+declare
+a int;
+b int;
+c int;
+begin
+a:=&a;
+b:=&b;
+c:=a+b;
+dbms_output.put_line('Sum of two numbers = '||c);
+end;
+/
+
+________________________________________________________
+
+1B
+
+declare
+num int:=1;
+begin
+loop
+if num>10 then
+exit;
+end if;
+dbms_output.put_line(num);
+num:=num+1;
+end loop;
+end;
+/
+
+________________________________________________________
+
+create sequence s1
+start with 10
+increment by 1
+minvalue 10
+maxvalue 100
+cache 10;
+
+create table student(
+sid number(3),
+sname varchar2(20));
+
+desc user_sequences;
+
+insert into student values(s1.nextval,'&name');
+
+insert into student values(s1.nextval,'&name');
+
+insert into student values(s1.nextval,'&name');
+
+
+select * from student;
+
+________________________________________________________
+3A
+
+declare 
+a int;
+begin
+a:=&a;
+if(mod(a,2)=0) then
+dbms_output.put_line(a||'is Even.');
+else
+dbms_output.put_line(a||'is Odd.');
+end if;
+end;
+/
+
+_______________________________________________________
+
+3B
+
+declare
+a int;
+b int;
+c int;
+begin
+a:=&a;
+b:=&b;
+c:=&c;
+if(a>b and a>c) then
+dbms_output.put_line(a||'is greatest.');
+elsif(b>a and b>c) then
+dbms_output.put_line(b||'is greatest.');
+else
+dbms_output.put_line(c||'is greatest.');
+end if;
+end;
+/
+
+________________________________________________________
+
+3C
+
+declare
+per float;
+grade char(1);
+begin
+per:=&per;
+
+if(per>=75.00) then
+grade:='D';
+elsif(per<75.00 and per>=60.00) then
+grade:='F';
+elsif(per<60.00 and per>45.00) then
+grade:='S';
+elsif(per<45.00 and per>35.00) then
+grade:='P';
+elsif(per<35.00) then
+grade:='F';
+end if;
+case
+when grade='D' then dbms_output.put_line('Distinction');
+when grade='F' then dbms_output.put_line('First Class');
+when grade='S' then dbms_output.put_line('Second Class');
+when grade='P' then dbms_output.put_line('Pass');
+when grade='K' then dbms_output.put_line('Fail');
+else dbms_output.put_line('No such grade');
+end case;
+end;
+/
+
+________________________________________________________
+
+4A
+
+declare
+num int;
+fact int;
+i int;
+begin
+num:=&num;
+fact:=1;
+for i in 1..num loop
+fact:=fact*i;
+end loop;
+dbms_output.put_line(fact);
+end;
+/
+
+________________________________________________________
+
+4B
+
+declare
+a int;
+b int;
+c int;
+i int;
+begin
+a:=0;
+b:=1;
+i:=3;
+dbms_output.put_line(a);
+dbms_output.put_line(b);
+while i<=10 loop
+c:=a+b;
+dbms_output.put_line(c);
+a:=b;
+b:=c;
+i:=i+1;
+end loop;
+end;
+/
+
+________________________________________________________
+
+5A
+
+declare
+a int;
+begin
+a:= 10;
+<<jump>>
+while a<20 loop
+dbms_output.put_line('value of a: ' || a);
+a:=a+1;
+if(a=15) then
+a:=a+1;
+goto jump;
+end if;
+end loop;
+end;
+/
+
+_______________________________________________________
+
+5B
+
+declare
+a int;
+begin
+a:=&a;
+if(a=15) then
+dbms_output.put_line('Guess is correct');
+else
+NULL;
+end if;
+end;
+/
+
+________________________________________________________
+
+6A
+
+DECLARE
+a number;
+b number;
+c number;
+
+PROCEDURE findMin(x IN number, y IN number, z OUT number) IS
+BEGIN
+	IF x<y THEN
+	z:=x;
+	ELSE
+		z:=y;
+	END IF;
+	END;
+	BEGIN
+	a:=23;
+	b:=45;
+	findMin(a,b,c);
+	dbms_output.put_line('Minimum if (23,45):' || c);
+END;
+/
+__________________________________________________________
+7A
+
+create or replace function adder(n1 in number,n2 in number)
+return number
+is
+n3 number(8);
+begin
+n3:=n1+n2;
+return n3;
+end;
+/
+
+_________________________________________________________
+
+7A(1)
+
+DECLARE
+n3 number(2);
+BEGIN
+n3:=adder(11,22);
+dbms_output.put_line('Addition is:'||n3);
+END;
+/
+
+_________________________________________________________
+
+7B
+
+create table customers(id number,name varchar2(20),dept varchar2(20),salary number(10));
+insert into customers values(1,'Pavan','IT',500000);
+insert into customers values(2,'kaustubh','CS',600000);
+insert into customers values(3,'Ritesh','CS',550000);
+insert into customers values(4,'Sejal','IT',650000);
+
+CREATE OR REPLACE FUNCTION totalCustomers
+RETURN number IS
+total  number(2):=0;
+BEGIN
+ SELECT count(*)into total
+ FROM customers;
+ RETURN total;
+END;
+/
+
+DECLARE
+ c number(2);
+BEGIN
+ c:=totalCustomers();
+ dbms_output.put_line('Total no.of Customers:'||c);
+END;
+/
+
+____________________________________________________________
+
+7C
+
+DECLARE
+ a number;
+ b number;
+ c number;
+FUNCTION findMax(x IN number,y IN number)
+RETURN number
+IS
+ z number;
+BEGIN
+ IF x>y THEN
+  z:=x;
+ ELSE
+  z:=y;
+ END IF;
+ RETURN z;
+END;
+
+BEGIN
+ a:=23;
+ b:=45;
+ dbms_output.put_line('Maximum of(23,45):'|| findMax(a,b));
+END;
+/
+ 
+_________________________________________________________
+
+7D
+
+DECLARE
+ num number;
+ factorial number;
+
+FUNCTION fact(x number)
+RETURN number
+IS 
+ f number;
+BEGIN
+ IF x=0 THEN
+  f:=1;
+ ELSE
+  f:=x *fact(x-1);
+ END IF;
+RETURN f;
+END;
+
+BEGIN
+num:=6;
+factorial:=fact(num);
+dbms_output.put_line(' Factorial ' || num || ' is ' || factorial );
+END;
+/
+
+__________________________________________________________
+
+8
+
+create or replace TRIGGER display_salary_changes
+after delete or insert or update on CUSTOMER1
+for each row
+when (new.id > 0)
+declare
+sal_fiff number;
+begin
+sal_fiff := :new.salary -:old.salary;
+dbms_output.put_line('old.salary: '|| :old.salary);
+dbms_output.put_line('new.salary: '|| :new.salary);
+dbms_output.put_line('Salary.diffrence :' ||sal_fiff);
+end;
+/
+
+________________________________________________________________
+
+9A
+
+DECLARE  
+   total_rows number(2); 
+BEGIN 
+   UPDATE CUSTOMERS
+   SET salary = salary + 500; 
+   IF sql%notfound THEN 
+      dbms_output.put_line('no customers selected'); 
+   ELSIF sql%found THEN 
+      total_rows := sql%rowcount;
+      dbms_output.put_line( total_rows || ' customers selected '); 
+   END IF;  
+END; 
+/ 
+
+________________________________________________________
+
+9B
+
+DECLARE 
+   c_id customer1.id%type; 
+   c_name customer1.name%type; 
+   c_addr customer1.address%type; 
+   CURSOR c_customer1 is
+      SELECT id, name, address FROM customer1; 
+BEGIN 
+   OPEN c_customer1; 
+   LOOP 
+   FETCH c_customer1 into c_id, c_name, c_addr; 
+      EXIT WHEN c_customer1%notfound; 
+      dbms_output.put_line(c_id || ' ' || c_name || ' ' || c_addr); 
+   END LOOP; 
+   CLOSE c_customer1; 
+END; 
+/
+
+________________________________________________________
+
+10
+
+CREATE OR REPLACE PACKAGE pkg_stud IS
+PROCEDURE updateRecord(sno stud.rollno%type);
+FUNCTION deleteRecord(snm stud.sname%type)
+return boolean;
+END pkg_stud;
+
+CREATE OR REPLACE PACKAGE BODY pkg_stud IS
+PROCEDURE updateRecord(sno stud.rollno%type) IS
+    BEGIN
+        update stud set age=23 where rollno=sno;
+        IF SQL%FOUND THEN
+            dbms_output.put_line('RECORD UPDATED');
+        ELSE
+            dbms_output.put_line('RECORD NOT FOUND');
+        END IF;
+    END updateRecord;
+
+FUNCTION deleteRecord(snm stud.sname%type) RETURN boolean IS
+BEGIN
+Delete from stud where sname=snm;
+RETURN SQL%FOUND;
+END deleteRecord;
+END pkg_stud;
+
+DECLARE
+    sno stud.rollno%type;
+    s_ago stud.age%type;
+    snm stud.sname%type;
+
+BEGIN
+    sno := &sno;
+    snm := &snm;
+    pkg_stud.updateRecord(sno);
+    IF pkg_stud.deleteRecord(snm) THEN
+        dbms_output.put_line('RECORD DELETED');
+    ELSE
+        dbms_output.put_line('RECORD NOT FOUND');
+    END IF;
+END;
+
+_________________________________________________________
+
+11
+
+DECLARE
+s_rollno stud.rollno%type;
+s_name stud.sname%type;
+s_course stud.course%type;
+
+BEGIN
+s_rollno := &s_rollno;
+SELECT sname, course INTO s_name, s_course
+FROM stud
+WHERE rollno = s_rollno;
+DBMS_OUTPUT.PUT_LINE('Name:'|| s_name);
+DBMS_OUTPUT.PUT_LINE('Address:'|| s_course);
+EXCEPTION
+WHEN no_data_found THEN
+DBMS_OUTPUT.PUT_LINE('No such student');
+WHEN others THEN
+DBMS_OUTPUT.PUT_LINE('Error!');
+END;
+/
+
+________________________________________________________
+
+11 with user input
+
+DECLARE
+s_rollno stud.rollno%type := &s_rollno;
+s_name stud.sname%type;
+s_course stud.course%type;
+invalid_rollno EXCEPTION;
+BEGIN
+if s_rollno<0 then
+RAISE invalid_rollno;
+END if;
+SELECT sname, course INTO s_name, s_course
+FROM stud
+WHERE rollno = s_rollno;
+DBMS_OUTPUT.PUT_LINE ('Name: '|| s_name);
+DBMS_OUTPUT.PUT_LINE ('Address: ' || s_course);
+EXCEPTION
+WHEN invalid_rollno THEN
+dbms_output.put_line('Enter positive rollno');
+WHEN no_data_found THEN
+dbms_output.put_line('No such student');
+WHEN others THEN
+dbms_output.put_line('Error!');
+END;
+/
+
+
+_________________________________________________________________
+
+12
+
+create table cust(id number, name varchar2(20), dept varchar2(20), salary
+number(10));
+
+insert into cust values(1,'Pavan','IT',500000);
+insert into cust values(2,'Ghanshyam','CS',600000);
+insert into cust values(3,'Megha','CS',550000);
+insert into cust values(4,'Sejal','IT',650000);
+
+DECLARE
+-- declare a cursor that return customer name
+CURSOR c_customer IS
+SELECT name
+FROM customer
+ORDER BY name;
+-- declare a nested table type
+TYPE t_customer_name_type
+IS TABLE OF customer.name%TYPE;
+-- declare and initialize a nested table variable
+t_customer_names t_customer_name_type := t_customer_name_type();
+BEGIN
+-- populate customer names from a cursor
+FOR r_customer IN c_customer
+LOOP
+t_customer_names.EXTEND;
+t_customer_names(t_customer_names.LAST) := r_customer.name;
+
+END LOOP;
+-- display customer names
+FOR l_index IN t_customer_names.FIRST..t_customer_names.LAST
+LOOP
+dbms_output.put_line(t_customer_names(l_index));
+END LOOP;
+END;
+
+
+
+
