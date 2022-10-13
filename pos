@@ -1,0 +1,579 @@
+1
+
+public class ProducerConsumerTest {
+    public static void main(String[] args) {
+       CubbyHole c = new CubbyHole();
+       Producer p1 = new Producer(c, 1);
+       Consumer c1 = new Consumer(c, 1);
+       p1.start(); 
+       c1.start();
+    }
+ }
+ class CubbyHole {
+    private int contents;
+    private boolean available = false;
+    
+    public synchronized int get() {
+       while (available == false) {
+          try {
+             wait();
+          } catch (InterruptedException e) {}
+       }
+       available = false;
+       notifyAll();
+       return contents;
+    }
+    public synchronized void put(int value) {
+       while (available == true) {
+          try {
+             wait();
+          } catch (InterruptedException e) { } 
+       }
+       contents = value;
+       available = true;
+       notifyAll();
+    }
+ }
+ class Consumer extends Thread {
+    private CubbyHole cubbyhole;
+    private int number;
+    
+    public Consumer(CubbyHole c, int number) {
+       cubbyhole = c;
+       this.number = number;
+    }
+    public void run() {
+       int value = 0;
+       for (int i = 0; i < 10; i++) {
+          value = cubbyhole.get();
+          System.out.println("Consumer #" + this.number + " got: " + value);
+       }
+    }
+ }
+ class Producer extends Thread {
+    private CubbyHole cubbyhole;
+    private int number;
+    public Producer(CubbyHole c, int number) {
+       cubbyhole = c;
+       this.number = number;
+    } 
+    public void run() {
+       for (int i = 0; i < 10; i++) {
+          cubbyhole.put(i);
+          System.out.println("Producer #" + this.number + " put: " + i);
+          try {
+             sleep((int)(Math.random() * 100));
+          } catch (InterruptedException e) { }
+       } 
+    }
+ } 
+
+_______________________________________________________________________________________________________________________________________________________________
+_______________________________________________________________________________________________________________________________________________________________
+
+
+2
+
+class DemoInt implements Runnable
+{
+	public void run()
+	{
+		System.out.println("Thread is running...");
+	}
+	public static void main(String args[])
+	{
+		DemoInt m1=new DemoInt();
+		Thread t1=new Thread(m1);
+		t1.start();
+	}
+}
+
+___________________________________________________________________
+
+import java.io.*;
+class Fibonacci extends Thread
+{
+    public void run()
+    {
+        try
+        {
+            int a=0,b=1,c=0;
+            BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+    
+    
+            System.out.print("Enter the limit for fibonacci:");
+        
+            int n=Integer.parseInt(br.readLine());
+            System.out.println("\n====================");
+            System.out.println("Fibonacci series:");
+            while(n>0)
+            {
+                System.out.print(c+" ");
+                a=b;
+                b=c;
+                c=a+b;
+                n=n-1;
+            }
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+        }
+    }
+}
+public class Main
+{
+    public static void main(String[] args)
+    {
+        Fibonacci f=new Fibonacci();
+        f.run();
+    }
+}
+
+__________________________________________________________________
+
+class MultithreadingDemo extends Thread
+{
+	public void run()
+	{
+		try
+		{
+			System.out.println("Thread " + Thread.currentThread().getId() + " is running");
+		}
+		catch (Exception e)
+		{
+			System.out.println("Exception is caught");
+		}
+	}
+}
+public class Multithread
+{
+	public static void main(String[] args)
+	{
+		int n=8;
+		for(int i = 0; i<n; i++)
+		{
+			MultithreadingDemo object=new MultithreadingDemo();
+			object.start();
+		}
+	}
+}
+			
+_______________________________________________________________________________________________________________________________________________________________
+_______________________________________________________________________________________________________________________________________________________________
+
+3
+
+import java.util.concurrent.Semaphore;
+
+class ReaderWritersProblem
+{
+    static Semaphore readLock = new Semaphore(1);
+    static Semaphore writeLock = new Semaphore(1);
+    static int readCount = 0;
+    
+    static class Read implements Runnable {
+        @Override
+        public void run() {
+            try {
+                readLock.acquire();
+                readCount++;
+                if (readCount == 1) {
+                    writeLock.acquire();
+                }
+                readLock.release();
+                
+                System.out.println("Thread "+Thread.currentThread().getName() + " is READING");
+                Thread.sleep(1500);
+                System.out.println("Thread "+Thread.currentThread().getName() + " has FINISHED READING");
+                
+                readLock.acquire();
+                readCount--;
+                if(readCount == 0) {
+                    writeLock.release();
+                }
+                readLock.release();
+            }catch(InterruptedException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+    
+    static class Write implements Runnable {
+        @Override
+        public void run() {
+            try {
+                writeLock.acquire();
+                System.out.println("Thread "+Thread.currentThread().getName() + " is WRITING");
+                Thread.sleep(2500);
+                System.out.println("Thread "+Thread.currentThread().getName() + " has FINISHED WRITING");
+                writeLock.release();
+            }catch (InterruptedException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+    
+    public static void main(String[] args) throws 
+	Exception {
+        Read read = new Read();
+        Write write = new Write();
+        Thread t1 = new Thread(read);
+        t1.setName("thread1");
+        Thread t2 = new Thread(read);
+        t2.setName("thread2");
+        Thread t3 = new Thread(write);
+        t3.setName("thread3");
+        Thread t4 = new Thread(read);
+        t4.setName("thread4");
+        t1.start();
+        t3.start();
+        t2.start();
+        t4.start();
+    }
+}
+
+_______________________________________________________________________________________________________________________________________________________________
+_______________________________________________________________________________________________________________________________________________________________
+
+4
+
+import java.io.*;
+class fcfs
+{
+    /**
+     * @param args
+     * @throws Exception
+     */
+    public static void main(String[] args) throws Exception 
+    {
+        int n,AT[],BT[],WT[],TAT[];
+        float AWT=0;
+        float ATAT=0;
+        InputStreamReader isr = new InputStreamReader(System.in);
+        BufferedReader br = new BufferedReader(isr);
+        System.out.println("Enter the number of process");
+        n=Integer.parseInt(br.readLine());
+        BT=new int[n];
+        WT=new int[n];
+        TAT=new int[n];
+        AT=new int[n];
+        System.out.println("Enter Burst time for each process\n************************");
+        for(int i=0;i<n;i++)
+        {
+            System.out.println("Enter BT for process "+(i+1));
+            BT[i]=Integer.parseInt(br.readLine());
+        }
+        System.out.println("***************************************************");
+        
+        for(int i=0;i<n;i++)
+        {
+            System.out.println("Enter AT for process "+(i+1));
+            AT[i]=Integer.parseInt(br.readLine());  
+        }
+        System.out.println("************************************************************");
+        WT[0]=0;
+        for(int i=1;i<n;i++)
+        {
+            WT[i]=WT[i-1]+BT[i-1]+AT[i-1];
+            WT[i]=WT[i]-AT[i];
+        }
+        for(int i=0;i<n;i++)
+        {
+            TAT[i]=WT[i]+BT[i];
+            AWT=AWT+WT[i];
+        }
+        System.out.println("PROCESS BT  WT  TAT ");
+        for(int i=0;i<n;i++)
+        {
+            System.out.println("    "+i+"   "+BT[i]+"   "+WT[i]+"   "+TAT[i]);
+        }
+        AWT=AWT/n;
+        System.out.println("********************************************************");
+        System.out.println("Average Waiting Time="+AWT+"\n************************************");
+
+        for (int i=0;i<n;i++)
+        {
+            TAT[i]=WT[i]+BT[i];
+            ATAT=ATAT+TAT[i];
+        }
+
+        ATAT=ATAT/n;
+        System.out.println("*******************************************************");
+        System.out.println("Average turn around time="+ATAT+"\n***********************");
+         
+    }
+}
+
+_______________________________________________________________________________________________________________________________________________________________
+_______________________________________________________________________________________________________________________________________________________________
+
+
+5
+
+import java.util.*;
+
+public class SJF
+{
+    public static void main(String args[])
+    {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter Number of Process: ");
+        int n = sc.nextInt();
+        int pid[] = new int[n];
+        int at[] = new int[n];
+        int bt[] = new int[n];
+        int ct[] = new int[n];
+        int ta[] = new int[n];
+        int wt[] = new int[n];
+        int f[] = new int[n];
+        int st=0, tot=0;
+        float avgwt=0, avgta=0;
+
+        for (int i=0;i<n;i++)
+        {
+            System.out.println("Enter process " + (i+1) + " arrival time:");
+            at[i] = sc.nextInt();
+            System.out.println("Enter process " + (i+1) + " burst time:");
+            bt[i] = sc.nextInt();
+            pid[i]=i+1;
+            f[i] = 0;
+        }
+        boolean a = true;
+        while(true)
+        {
+            int c=n, min=999;
+            if (tot == n)
+            break;
+            for (int i=0;i<n;i++)
+            {
+                if((at[i]<= st) && (f[i]==0) && (bt[i]<min))
+                {
+                    min=bt[i];
+                    c=i;
+                }
+            }
+            if(c==n)
+            {
+                st++;
+            }
+            else
+            {
+                ct[c]=st+bt[c];
+                st+=bt[c];
+                ta[c]=ct[c]-at[c];
+                wt[c]=ta[c]-bt[c];
+                f[c]=1;
+                tot++;
+            }
+        }
+        System.out.println("\npid arrival burst complete turn waiting");
+        for(int i=0;i<n;i++)
+        {
+            avgwt+= wt[i];
+            avgta+= ta[i];
+            System.out.println(pid[i]+"\t"+ at[i]+"\t"+bt[i]+"\t"+ct[i]+"\t"+ta[i]+"\t"+wt[i]);   
+        }
+        System.out.println("\n average tat is "+(float)(avgta/n));
+        System.out.println("Average wt is " + (float)(avgwt/n));
+        sc.close();
+    }
+}
+
+_______________________________________________________________________________________________________________________________________________________________
+_______________________________________________________________________________________________________________________________________________________________
+
+6
+
+import java.util.Scanner;
+
+public class RoundRobin
+{
+    public static void main(String args[])
+    {
+        int n,i,gt,count=0,temp,sq=0,bt[],wt[],tat[],rem_bt[];
+        float awt=0, atat=0;
+        bt=new int[10];
+        wt=new int[10];
+        tat = new int[10];
+        rem_bt = new int[10];
+        Scanner s=new Scanner(System.in);
+        System.out.print("Enter the number of process (maximum 10) = ");
+        n = s.nextInt();
+        System.out.print("Enter the burst time of process\n");
+        for (i = 0;i<n;i++)
+        {
+            System.out.println("P"+i+" - ");
+            bt[i] = s.nextInt();
+            rem_bt[i] = bt[i];
+        }
+        System.out.print("Enter the quantum time: ");
+        int qt = s.nextInt();
+        while(true)
+        {
+            for(i=0,count=0;i<n;i++)
+            {
+                temp = qt;
+                if(rem_bt[i] == 0)
+                {
+                    count++;
+                    continue;
+                }
+                if(rem_bt[i]>qt)
+                    rem_bt[i]=rem_bt[i] - qt;
+                else
+                if(rem_bt[i]>=0);
+                {
+                    temp = rem_bt[i];
+                    rem_bt[i]=0;
+                }
+                sq = sq + temp;
+                tat[i] = sq;
+            }
+            if(n==count)
+                break;
+        }
+        System.out.print("-----------------------------------------------------------------");
+        System.out.print("\nProcess\tBurst Time\t    Turnaround Time\t    Waiting Time\n");
+        System.out.print("--------------------------------------------------------------------");
+        for(i=0;i<n;i++)
+        {
+            wt[i]=tat[i]-bt[i];
+            awt=awt+wt[i];
+            atat=atat+tat[i];
+            System.out.print("\n "+(i+1)+"\t "+bt[i]+"\t\t "+tat[i]+"\t\t"+wt[i]+"\n");
+        }
+        awt=awt/n;
+        atat=atat/n;
+        System.out.println("\nAverage waiting Time ="+awt+"\n");
+        System.out.println("\nAverage turnaround Time ="+atat);
+    }
+}
+_______________________________________________________________________________________________________________________________________________________________
+_______________________________________________________________________________________________________________________________________________________________
+
+8
+
+import java.io.*;
+class FIFO
+{
+    public static void main(String args[]) throws IOException 
+    {
+        int n;
+        int f;
+        float rat;
+        BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Enter the number of Frames: ");
+        f=Integer.parseInt(br.readLine());
+        int fifo[]=new int[f];
+        System.out.println("Enter the number of input: ");
+        n=Integer.parseInt(br.readLine());
+        int inp[]=new int[n];
+        System.out.println("Enter INPUTS: ");
+        for(int i=0;i<n;i++)
+            inp[i]=Integer.parseInt(br.readLine());
+            System.out.println("----------------------------------------");
+        for(int i=0;i<f;i++)
+            fifo[i]=-1;
+        int Hit=0;
+        int Fault=0;
+        int j=0;
+        boolean check;
+        for(int i=0;i<n;i++)
+        {
+            check=false;
+                for(int k=0;k<f;k++)
+                if(fifo[k]==inp[i])
+                {
+                    check=true;
+                    Hit=Hit+1;
+                }
+                if(check==false)
+                {
+                    fifo[j]=inp[i];
+                    j++;
+                    if(j>=f)
+                    j=0;
+                    Fault=Fault+1;
+                }
+        }rat = (float)Hit/(float)n;
+        System.out.println("HIT: "+Hit+" FAULT:"+Fault+"RATIO:"+rat);        
+    }
+}
+_______________________________________________________________________________________________________________________________________________________________
+_______________________________________________________________________________________________________________________________________________________________
+
+10
+
+// Create a file
+
+import java.io.*;
+public class createFile
+{
+	public static void main(String[] args)
+	{
+		try
+		{
+			File file = new File("C://Users//admin//Desktop//javafile.txt");
+			if (file.createNewFile())
+			{
+				System.out.println("New File is created!");
+			}
+			else
+			{
+				System.out.println("File Name Already Exists...");
+			}
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+}
+
+
+_____________________________________________________________________________________________
+
+// Delete a File
+
+import java.io.*;
+class DeleteFile
+{
+    public static void main(String[] args)
+    {
+        File f0 = new File("E:\\FileCreated.txt");
+        if (f0.delete())
+        {
+            System.out.println(f0.getName()+ "file is deleted successfully.");
+        }
+        else
+        {
+            System.out.println("Unexpected error found in deletion of the file.");
+        }
+    }
+}
+
+____________________________________________________________________________________________
+
+// Write a file in java
+
+import java.io.*;
+
+class WriteToFile
+{
+	public static void main(String[] args)
+	{
+		try
+		{
+			FileWriter fwrite = new FileWriter("WrittenFile.txt");
+			fwrite.write("Hi, I am Max currently in Shiv sir's lecture");
+			fwrite.close();
+			System.out.println("File has been created and the content has been generated");
+		}
+		catch (IOException e)
+		{
+			System.out.println("Unexception error occurred");
+			e.printStackTrace();
+		}
+	}
+}
