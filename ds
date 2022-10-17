@@ -1,3 +1,5 @@
+#Abstract Data Type
+
 from array import *
 
 def insert(array1,index,element):
@@ -36,186 +38,130 @@ if __name__ == '__main__':
     else:
         print("Element not found")
 
-_______________________________________________________________________________________________________________________________________________________________________
-_______________________________________________________________________________________________________________________________________________________________________
+__________________________________________________________________________________________________________
+__________________________________________________________________________________________________________
 
-#Stack
+#Singly Linked List
 
-class Stack:
+class Node:
+    def __init__(self,data):
+        self.data = data
+        self.next = None
+        self.prev= None
+
+class LinkedList:
     def __init__(self):
-        self.elements=[]
+        self.head = None
 
-    def push(self,data):
-        self.elements.append(data)
-        return data
-
-    def pop(self):
-        if self.is_empty():
-            print('Stack is Empty.')
+    def insertAtBegin(self,data):
+        temp = Node(data)
+        if self.head == None:
+            self.head = temp
         else:
-            print('Popped Value: ',self.elements[-1])
-            self.elements.pop()
+            temp.next = self.head
+            self.head = temp
 
-    def peek(self):
-        return self.elements[-1]
+    def insertAtEnd(self,data):
+        temp = Node(data)
+        if self.head == None:
+            self.head = temp
+        else:
+            curr = self.head
+            while curr.next != None:
+                curr = curr.next
+            curr.next = temp
 
-    def is_empty(self):
-        return len(self.elements) == 0
+    def insertAtGivenPosition(self,data,position):
+        count = 1
+        curr = self.head
+        while count < position-1 and curr != None:
+            curr = curr.next
+            count += 1 #count = count + 1
+        temp = Node(data)   
+        temp.next = curr.next 
+        curr.next = temp
 
-stack = Stack()
-print(stack.is_empty())
-stack.push(1)
-stack.push(2)
-stack.push(3)
-stack.push(4)
-stack.push(5)
-print(stack.is_empty())
-print(stack.peek())
-print(stack.peek())
-stack.pop()
-stack.pop() 
-stack.pop() 
-stack.pop() 
-stack.pop() 
-stack.pop() 
-print(stack.is_empty())
+    def traverse(self):
+        curr = self.head
+        while curr != None:
+            print(curr.data)
+            curr = curr.next
 
-_______________________________________________________________________________________________________________________________________________________________________
-_______________________________________________________________________________________________________________________________________________________________________
+    def delFromBegin(self):
+        try:
+            if self.head == None:
+                raise Exception("Empty Linked List")
+            else:
+                temp = self.head
+                self.head = self.head.next
+                del temp
+        except Exception as e:  
+                print(str(e))  
 
-#Queue
+    def delFromEnd(self):
+        try:
+            if self.head == None:
+                raise Exception("Empty Linked List")
+            else:
+                curr = self.head
+                prev = None
+                while curr.next != None:
+                    prev = curr
+                    curr = curr.next
+                prev.next = curr.next
+                del curr
+        except Exception as e:
+            print(str(e))
 
-class Queue:
-    def __init__(self):
-        self.queue = []
+    def delAtPosition(self,position):
+        try:
+            if self.head == None:
+                raise Exception("Empty Linked List")
+            else:
+                curr = self.head
+                prev = None
+                count = 1
+                while curr != None and count < position:
+                    prev = curr
+                    curr = curr.next
+                    count += 1
+                prev.next = curr.next
+                del curr
+        except Exception as e:
+            print(str(e))
 
-    def enqueue(self,item):
-        self.queue.append(item)
+def main():
+    ll = LinkedList()
+    ll.insertAtBegin(10)
+    ll.insertAtBegin(20)
+    ll.insertAtBegin(30)
+    ll.insertAtBegin(40)
+    ll.traverse()
+    print()
+    ll.insertAtEnd(50)
+    ll.traverse()
+    print()
+    ll.insertAtBegin(60)
+    ll.traverse()
+    print()
+    ll.insertAtGivenPosition(70,3)
+    ll.traverse()
+    print()
+    ll.delFromBegin()
+    ll.traverse()
+    print()
+    ll.delFromEnd()
+    ll.traverse()
+    print()
+    ll.delAtPosition(4)
+    ll.traverse()
+    
+main()
 
-    def dequeue(self):
-        if len(self.queue)<1:
-            return None
-        return self.queue.pop(0)
-
-    def display(self):
-        print(self.queue)
-
-    def size(self):
-        print(len(self.queue))
-
-q = Queue()
-q.enqueue(34)
-q.enqueue(45)
-q.enqueue(69)
-q.enqueue(34)
-q.enqueue(25)
-q.size()
-q.display()
-q.dequeue()
-print("After removing an element")
-q.display()
-
-_______________________________________________________________________________________________________________________________________________________________________
-_______________________________________________________________________________________________________________________________________________________________________
-
-#Hash Table
-
-hash_table = [[] for _ in range(10)]
-print(hash_table)
-
-def insert(hash_table, key, value):
-    hash_key = hash(key) % len(hash_table)
-    key_exists=False
-    bucket=hash_table[hash_key]
-    for i,kv, in enumerate(bucket):
-        k,v=kv
-        if key==k:
-            key_exists=True
-            break
-    if key_exists:
-        bucket[i]=((key,value))
-    else:
-        bucket.append((key,value))
-
-def search(hash_table,key):
-    hash_key = hash(key) % len(hash_table)
-    bucket = hash_table[hash_key]
-    for i,kv in enumerate(bucket):
-        k,v = kv
-        if key == k:
-            return v
-
-def delete(hash_table, key):
-    hash_key = hash(key) % len(hash_table)
-    key_exists=False
-    bucket=hash_table[hash_key]
-    for i,kv, in enumerate(bucket):
-        k,v=kv
-        if key==k:
-            key_exists=True
-            break
-    if key_exists:
-        del bucket[i]
-        print('Key{} deleted'.format(key))
-    else:
-        print('Key{} not found'.format(key))
-
-insert(hash_table,10,'Nepal')
-insert(hash_table,25,'USA')
-insert(hash_table,20,'India')
-print(hash_table)
-
-print(search(hash_table,10))
-print(search(hash_table,20))
-print(search(hash_table,30))
-
-delete(hash_table,100)
-print(hash_table)
-delete(hash_table,20)
-print(hash_table)
-
-______________________________________________________________________________________________________________________________________________________________________
-______________________________________________________________________________________________________________________________________________________________________
-
-#Function to display hashtable 
-def display_hash(hashTable):
-    for i in range(len(hashTable)):
-        print(i, end=" ")
-
-        for j in hashTable[i]:
-            print("-->", end=" ")
-            print(j, end=" ")
-
-        print()
-
-#Creating Hashtable as a nested list.
-HashTable = [[] for _ in range(10)]
-
-#Hashing Function to return key for every value.
-def Hashing(keyvalue):
-    return keyvalue % len(HashTable)
-
-#Insert Function to add values to the hash table
-def insert(Hashtable, keyvalue, value):
-    hash_key = Hashing(keyvalue)
-    Hashtable[hash_key].append(value)
-
-#Driver Code 
-insert(HashTable, 10, 'Allahabad')
-insert(HashTable, 25, 'Mumbai')
-insert(HashTable, 20, 'Mathura')
-insert(HashTable, 9, 'Delhi')
-insert(HashTable, 21, 'Punjab')
-insert(HashTable, 21, 'Noida')
-
-display_hash(HashTable)
-
-______________________________________________________________________________________________________________________________________________________________________
-______________________________________________________________________________________________________________________________________________________________________
+__________________________________________________________________________________________________________
+__________________________________________________________________________________________________________
 
 #Doubly Linked List
-
-#pract : 2
 
 class Node:
     def __init__(self,data):
@@ -340,135 +286,138 @@ def main():
     
 main()
             
+__________________________________________________________________________________________________________
+__________________________________________________________________________________________________________
 
-______________________________________________________________________________________________________________________________________________________________________
-______________________________________________________________________________________________________________________________________________________________________
+#Stack
 
-#Singly Linked List
-
-#pract : 2
-
-class Node:
-    def __init__(self,data):
-        self.data = data
-        self.next = None
-        self.prev= None
-
-class LinkedList:
+class Stack:
     def __init__(self):
-        self.head = None
+        self.elements=[]
 
-    def insertAtBegin(self,data):
-        temp = Node(data)
-        if self.head == None:
-            self.head = temp
+    def push(self,data):
+        self.elements.append(data)
+        return data
+
+    def pop(self):
+        if self.is_empty():
+            print('Stack is Empty.')
         else:
-            temp.next = self.head
-            self.head = temp
+            print('Popped Value: ',self.elements[-1])
+            self.elements.pop()
 
-    def insertAtEnd(self,data):
-        temp = Node(data)
-        if self.head == None:
-            self.head = temp
-        else:
-            curr = self.head
-            while curr.next != None:
-                curr = curr.next
-            curr.next = temp
+    def peek(self):
+        return self.elements[-1]
 
-    def insertAtGivenPosition(self,data,position):
-        count = 1
-        curr = self.head
-        while count < position-1 and curr != None:
-            curr = curr.next
-            count += 1 #count = count + 1
-        temp = Node(data)   
-        temp.next = curr.next 
-        curr.next = temp
+    def is_empty(self):
+        return len(self.elements) == 0
 
-    def traverse(self):
-        curr = self.head
-        while curr != None:
-            print(curr.data)
-            curr = curr.next
+stack = Stack()
+print(stack.is_empty())
+stack.push(1)
+stack.push(2)
+stack.push(3)
+stack.push(4)
+stack.push(5)
+print(stack.is_empty())
+print(stack.peek())
+print(stack.peek())
+stack.pop()
+stack.pop() 
+stack.pop() 
+stack.pop() 
+stack.pop() 
+stack.pop() 
+print(stack.is_empty())
 
-    def delFromBegin(self):
+__________________________________________________________________________________________________________
+__________________________________________________________________________________________________________
+
+#Queue
+
+class Queue:
+    def __init__(self):
+        self.queue = []
+
+    def enqueue(self,item):
+        self.queue.append(item)
+
+    def dequeue(self):
+        if len(self.queue)<1:
+            return None
+        return self.queue.pop(0)
+
+    def display(self):
+        print(self.queue)
+
+    def size(self):
+        print(len(self.queue))
+
+q = Queue()
+q.enqueue(34)
+q.enqueue(45)
+q.enqueue(69)
+q.enqueue(34)
+q.enqueue(25)
+q.size()
+q.display()
+q.dequeue()
+print("After removing an element")
+q.display()
+
+__________________________________________________________________________________________________________
+__________________________________________________________________________________________________________
+
+#Priority Queue with insertion, deletion, traversal operations.
+
+class PriorityQueue(object):
+    def __init__(self):
+        self.queue = []
+
+    def __str__(self):
+        return ' '.join([str(i) for i in self.queue])
+
+    # for checking if the queue is empty
+    def isEmpty(self):
+        return len(self.queue) == 0
+
+    # for inserting an element in the queue
+    def insert(self, data):
+        self.queue.append(data)
+
+    # for popping an element based on Priority
+    def delete(self):
         try:
-            if self.head == None:
-                raise Exception("Empty Linked List")
-            else:
-                temp = self.head
-                self.head = self.head.next
-                del temp
-        except Exception as e:  
-                print(str(e))  
+            max_val = 0
+            for i in range(len(self.queue)):
+                if self.queue[i] > self.queue[max_val]:
+                    max_val = i
+            item = self.queue[max_val]
+            del self.queue[max_val]
+            return item
+        except IndexError:
+            print()
+            exit()
 
-    def delFromEnd(self):
-        try:
-            if self.head == None:
-                raise Exception("Empty Linked List")
-            else:
-                curr = self.head
-                prev = None
-                while curr.next != None:
-                    prev = curr
-                    curr = curr.next
-                prev.next = curr.next
-                del curr
-        except Exception as e:
-            print(str(e))
+if __name__ == '__main__':
+    myQueue = PriorityQueue()
+    print("Queue before insertion")
+    print(myQueue)
+    myQueue.insert(12)
+    myQueue.insert(1)
+    myQueue.insert(14)
+    myQueue.insert(7)
+    print("Queue after insertion")
+    print(myQueue) 
+    while not myQueue.isEmpty():
+        print("Queue deleted item based on priority")
+        print(myQueue.delete())
 
-    def delAtPosition(self,position):
-        try:
-            if self.head == None:
-                raise Exception("Empty Linked List")
-            else:
-                curr = self.head
-                prev = None
-                count = 1
-                while curr != None and count < position:
-                    prev = curr
-                    curr = curr.next
-                    count += 1
-                prev.next = curr.next
-                del curr
-        except Exception as e:
-            print(str(e))
 
-def main():
-    ll = LinkedList()
-    ll.insertAtBegin(10)
-    ll.insertAtBegin(20)
-    ll.insertAtBegin(30)
-    ll.insertAtBegin(40)
-    ll.traverse()
-    print()
-    ll.insertAtEnd(50)
-    ll.traverse()
-    print()
-    ll.insertAtBegin(60)
-    ll.traverse()
-    print()
-    ll.insertAtGivenPosition(70,3)
-    ll.traverse()
-    print()
-    ll.delFromBegin()
-    ll.traverse()
-    print()
-    ll.delFromEnd()
-    ll.traverse()
-    print()
-    ll.delAtPosition(4)
-    ll.traverse()
-    
-main()
-            
-______________________________________________________________________________________________________________________________________________________________________
-______________________________________________________________________________________________________________________________________________________________________
+__________________________________________________________________________________________________________
+__________________________________________________________________________________________________________
 
-#Travelling Salesman Problem
-
-#Write a program to implement Travelling Salesman Problem.
+#Travelling Salesman Problem.
 
 from sys import maxsize
 from itertools import permutations
@@ -502,6 +451,100 @@ def travellingSalesmanProblem(graph,s):
 
 travellingSalesmanProblem([[0, 10, 15, 20], [10, 0, 35, 25],[15, 35, 0, 30], [20, 25, 30, 0]],0)
 
-______________________________________________________________________________________________________________________________________________________________________
-______________________________________________________________________________________________________________________________________________________________________
+__________________________________________________________________________________________________________
+__________________________________________________________________________________________________________
+
+#Create basic Hash Table for insertion, deletion, traversal operations.
+
+hash_table = [[] for _ in range(10)]
+print(hash_table)
+
+def insert(hash_table, key, value):
+    hash_key = hash(key) % len(hash_table)
+    key_exists=False
+    bucket=hash_table[hash_key]
+    for i,kv, in enumerate(bucket):
+        k,v=kv
+        if key==k:
+            key_exists=True
+            break
+    if key_exists:
+        bucket[i]=((key,value))
+    else:
+        bucket.append((key,value))
+
+def search(hash_table,key):
+    hash_key = hash(key) % len(hash_table)
+    bucket = hash_table[hash_key]
+    for i,kv in enumerate(bucket):
+        k,v = kv
+        if key == k:
+            return v
+
+def delete(hash_table, key):
+    hash_key = hash(key) % len(hash_table)
+    key_exists=False
+    bucket=hash_table[hash_key]
+    for i,kv, in enumerate(bucket):
+        k,v=kv
+        if key==k:
+            key_exists=True
+            break
+    if key_exists:
+        del bucket[i]
+        print('Key{} deleted'.format(key))
+    else:
+        print('Key{} not found'.format(key))
+
+insert(hash_table,10,'Nepal')
+insert(hash_table,25,'USA')
+insert(hash_table,20,'India')
+print(hash_table)
+
+print(search(hash_table,10))
+print(search(hash_table,20))
+print(search(hash_table,30))
+
+delete(hash_table,100)
+print(hash_table)
+delete(hash_table,20)
+print(hash_table)
+
+__________________________________________________________________________________________________________
+__________________________________________________________________________________________________________
+
+#Create hash table to handle collisions using overflow chaining.
+
+#Function to display hashtable 
+def display_hash(hashTable):
+    for i in range(len(hashTable)):
+        print(i, end=" ")
+
+        for j in hashTable[i]:
+            print("-->", end=" ")
+            print(j, end=" ")
+
+        print()
+
+#Creating Hashtable as a nested list.
+HashTable = [[] for _ in range(10)]
+
+#Hashing Function to return key for every value.
+def Hashing(keyvalue):
+    return keyvalue % len(HashTable)
+
+#Insert Function to add values to the hash table
+def insert(Hashtable, keyvalue, value):
+    hash_key = Hashing(keyvalue)
+    Hashtable[hash_key].append(value)
+
+#Driver Code 
+insert(HashTable, 10, 'Allahabad')
+insert(HashTable, 25, 'Mumbai')
+insert(HashTable, 20, 'Mathura')
+insert(HashTable, 9, 'Delhi')
+insert(HashTable, 21, 'Punjab')
+insert(HashTable, 21, 'Noida')
+
+display_hash(HashTable)
 
